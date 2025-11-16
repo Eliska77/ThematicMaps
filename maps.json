@@ -3,15 +3,15 @@
     "category": "Ortofoto",
     "name": "Ortofoto ČR (ČÚZK)",
     "type": "WMS",
-    "url": "https://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/WMService.aspx?service=WMS&request=GetMap&layers=ORTOFOTO&format=image/png&crs=EPSG:3857",
+    "url": "https://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/WMService.aspx",
     "layers": "ORTOFOTO",
-    "description": "Aktuální ortofoto České republiky, poskytované ČÚZK (2025)"
+    "description": "Aktuální ortofoto České republiky poskytované ČÚZK (2025)"
   },
   {
     "category": "Základní mapy",
-    "name": "ZM10",
+    "name": "ZM10 (Základní topografie 1:10 000)",
     "type": "WMS",
-    "url": "https://services.cuzk.cz/wms/wms.asp?request=GetMap&layers=ZM10&format=image/png&crs=EPSG:3857",
+    "url": "https://services.cuzk.cz/wms/wms.asp",
     "layers": "ZM10",
     "description": "Základní mapa 1:10 000, ČÚZK (2025)"
   },
@@ -19,7 +19,7 @@
     "category": "Základní mapy",
     "name": "ZM50",
     "type": "WMS",
-    "url": "https://services.cuzk.cz/wms/wms.asp?request=GetMap&layers=ZM50&format=image/png&crs=EPSG:3857",
+    "url": "https://services.cuzk.cz/wms/wms.asp",
     "layers": "ZM50",
     "description": "Základní mapa 1:50 000, ČÚZK (2025)"
   },
@@ -27,7 +27,7 @@
     "category": "Základní mapy",
     "name": "ZM200",
     "type": "WMS",
-    "url": "https://services.cuzk.cz/wms/wms.asp?request=GetMap&layers=ZM200&format=image/png&crs=EPSG:3857",
+    "url": "https://services.cuzk.cz/wms/wms.asp",
     "layers": "ZM200",
     "description": "Základní mapa 1:200 000, ČÚZK (2025)"
   },
@@ -35,8 +35,128 @@
     "category": "Reliéf",
     "name": "DMR 5G – stínovaný reliéf",
     "type": "WMS",
-    "url": "https://services.cuzk.cz/wms/dmr5g-relief/WMService.aspx?request=GetMap&layers=GR_RAS&format=image/png&crs=EPSG:3857",
+    "url": "https://services.cuzk.cz/wms/dmr5g-relief/WMService.aspx",
     "layers": "GR_RAS",
     "description": "Stínovaný reliéf z digitálního modelu terénu 5G"
   },
-  
+  {
+    "category": "RÚIAN",
+    "name": "Katastrální parcely",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-cp-wms.asp",
+    "layers": "CP.CadastralParcel",
+    "description": "Parcely – geometrie a hranice pozemků podle RÚIAN (INSPIRE)"
+  },
+  {
+    "category": "RÚIAN",
+    "name": "Katastrální území",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-cp-wms.asp",
+    "layers": "CP.CadastralZoning",
+    "description": "Katastrální území – hranice katastrálních území podle RÚIAN"
+  },
+   {
+    "category": "RÚIAN",
+    "name": "Hranice parcel / k.ú.",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-cp-wms.asp",
+    "layers": "CP.CadastralBoundary",
+    "description": "Hranice parcel a katastrální území"
+  },
+  {
+    "category": "RÚIAN",
+    "name": "Adresní místa",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-ad-wms.asp",
+    "layers": "AD.AddressPlace",
+    "description": "Bodová adresní místa – lokalizace budov a domů"
+  },
+   {
+    "category": "RÚIAN",
+    "name": "Ulice",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-ad-wms.asp",
+    "layers": "AD.Thoroughfare",
+    "description": "Ulice – názvy a geometrie komunikací"
+  },
+   {
+    "category": "RÚIAN",
+    "name": "Čísla adres",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-ad-wms.asp",
+    "layers": "AD.Address.Text.AddressNumber",
+    "description": "Orientační / popisná čísla domů"
+  },
+  {
+    "category": "RÚIAN",
+    "name": "Budovy",
+    "type": "WMS",
+    "url": "https://services.cuzk.gov.cz/wms/inspire-bu-wms.asp",
+    "layers": "BU.Building",
+    "description": "Stavební objekty a budovy podle RÚIAN"
+  },   
+   {
+    "category": "CENIA – životní prostředí",
+    "name": "NATURA 2000",
+    "type": "WMS",
+    "url": "https://geoportal.cenia.cz/arcgis/services/Cenia/cenia_mapy/MapServer/WMSServer",
+    "layers": "NATURA2000",
+    "description": "Evropsky chráněná území NATURA 2000"
+  },   
+   {
+    "category": "CENIA – životní prostředí",
+    "name": "ZCHÚ",
+    "type": "WMS",
+    "url": "https://geoportal.cenia.cz/arcgis/services/Cenia/cenia_mapy/MapServer/WMSServer",
+    "layers": "ZCHU",
+    "description": "Zvláště chráněná území v ČR"
+  },  
+ {
+    "category": "CENIA – životní prostředí",
+    "name": "CORINE Land Cover",
+    "type": "WMS",
+    "url": "https://geoportal.cenia.cz/arcgis/services/Cenia/cenia_mapy/MapServer/WMSServer",
+    "layers": "CORINE_LC",
+    "description": "CORINE pokrytí krajiny"
+  },   
+ {
+    "category": "DIBAVOD – voda",
+    "name": "Vodní toky",
+    "type": "WMS",
+    "url": "https://services.cenia.cz/wms/dibavod2/service.svc/get",
+    "layers": "vodni_toky",
+    "description": "Vodní toky ČR – DIBAVOD"
+  },   
+  {
+    "category": "DIBAVOD – voda",
+    "name": "Vodní nádrže",
+    "type": "WMS",
+    "url": "https://services.cenia.cz/wms/dibavod2/service.svc/get",
+    "layers": "vodni_nadrze",
+    "description": "Vodní nádrže ČR – DIBAVOD"
+  },  
+ {
+    "category": "ČHMÚ – meteoradar",
+    "name": "Radar – RainViewer",
+    "type": "WMTS",
+    "url": "https://tilecache.rainviewer.com/v2/radar/{z}/{x}/{y}/0/1_1.png",
+    "layers": "rainviewer",
+    "description": "Radarová data – RainViewer"
+  },   
+   {
+    "category": "Sentinel 2 (ESA)",
+    "name": "Sentinel-2 – s2cloudless 2020",
+    "type": "WMTS",
+    "url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+    "layers": "s2cloudless-2020",
+    "description": "Sentinel-2, cloud-free 2020"
+  },   
+   {
+    "category": "Sentinel 2 (ESA)",
+    "name": "Sentinel-2 – s2cloudless 2021",
+    "type": "WMTS",
+    "url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+    "layers": "s2cloudless-2021",
+    "description": "Sentinel-2, cloud-free 2021"
+  }
+]
