@@ -3,9 +3,17 @@
     "category": "Ortofoto",
     "name": "Ortofoto ČR (ČÚZK)",
     "type": "WMS",
-    "url": "https://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/WMService.aspx",
-    "layers": "ORTOFOTO",
+    "url": "https://ags.cuzk.gov.cz/arcgis1/services/ORTOFOTO/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+    "layers": "0",
     "description": "Aktuální ortofoto České republiky poskytované ČÚZK (2025)"
+  },
+  {
+    "category": "Katastrální mapa",
+    "name": "Katastrální mapa ČÚZK",
+    "type": "WMS",
+    "url": "http://services.cuzk.cz/wms/local-km-wms.asp",
+    "layers": "KN",
+    "description": "Katastrální mapa – WMS služba ČÚZK"
   },
   {
     "category": "Základní mapy",

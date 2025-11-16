@@ -91,37 +91,58 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def add_selected_layers(self):
         """Přidá vybrané vrstvy do QGIS projektu."""
+
         for category_index in range(self.treeWidget_layers.topLevelItemCount()):
             cat_item = self.treeWidget_layers.topLevelItem(category_index)
+
             for i in range(cat_item.childCount()):
                 item = cat_item.child(i)
-                if item.checkState(0) == Qt.Checked:
-                    layer_name = item.text(0)
-                    # najdeme data v JSON podle jména
-                    layer_info = next((l for l in self.layers_data if l["name"] == layer_name), None)
-                    if not layer_info:
+
+                if item.checkState(0) != Qt.Checked:
+                    continue
+
+                layer_name = item.text(0)
+                layer_info = next((l for l in self.layers_data if l["name"] == layer_name), None)
+
+                if not layer_info:
+                    continue
+
+                try:
+                    layer_type = layer_info["type"].upper()
+
+                    if layer_type == "WMS":
+                        base_url = layer_info["url"].split("?")[0]
+                        uri = (
+                            f"url={base_url}?service=WMS&request=GetMap&version=1.3.0"
+                            f"&layers={layer_info['layers']}"
+                            f"&styles=&format=image/png&crs=EPSG:3857"
+                        )
+                        rlayer = QgsRasterLayer(uri, layer_name, "wms")
+
+                    elif layer_type == "WMTS":
+                        uri = (
+                            f"url={layer_info['url']}"
+                            f"&layer={layer_info['layers']}"
+                            f"&tileMatrixSet=EPSG:3857"
+                            f"&format=image/png"
+                        )
+                        rlayer = QgsRasterLayer(uri, layer_name, "wmts")
+
+                    elif layer_type == "XYZ":
+                        uri = layer_info["url"]
+                        rlayer = QgsRasterLayer(uri, layer_name, "xyz")
+
+                    else:
+                        QMessageBox.warning(self, "Nepodporovaný typ", f"Typ vrstvy není podporován: {layer_type}")
                         continue
-                    try:
-                        layer_type = layer_info["type"].upper()
 
-                        if layer_type == "WMS":
-                            uri = f"{layer_info['url']}?layers={layer_info['layers']}&crs=EPSG:3857&format=image/png"
-                            rlayer = QgsRasterLayer(uri, layer_name, "wms")
-                        elif layer_type == "WMTS":
-                            uri = layer_info["url"]
-                            rlayer = QgsRasterLayer(uri, layer_name, "wmts")
-                        elif layer_type == "XYZ" or ("tilecache" in layer_info["url"].lower()):
-                            uri = layer_info["url"]
-                            rlayer = QgsRasterLayer(f"type=xyz&url={uri}", layer_name, "xyz")
-                        else:
-                            continue
+                    if rlayer.isValid():
+                        QgsProject.instance().addMapLayer(rlayer)
+                    else:
+                        QMessageBox.warning(self, "Chyba vrstvy", f"Nelze načíst vrstvu:\n{layer_name}")
 
-                        if rlayer.isValid():
-                            QgsProject.instance().addMapLayer(rlayer)
-                        else:
-                            QMessageBox.warning(self, "Chyba vrstvy", f"Nelze načíst vrstvu: {layer_name}")
-                    except Exception as e:
-                        QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_name}:\n{str(e)}")
+                except Exception as e:
+                    QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_name}:\n{str(e)}")
 
         self.accept()
 
