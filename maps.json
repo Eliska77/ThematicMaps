@@ -1,0 +1,42 @@
+[
+  {
+    "category": "Ortofoto",
+    "name": "Ortofoto ČR (ČÚZK)",
+    "type": "WMS",
+    "url": "https://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/WMService.aspx?service=WMS&request=GetMap&layers=ORTOFOTO&format=image/png&crs=EPSG:3857",
+    "layers": "ORTOFOTO",
+    "description": "Aktuální ortofoto České republiky, poskytované ČÚZK (2025)"
+  },
+  {
+    "category": "Základní mapy",
+    "name": "ZM10",
+    "type": "WMS",
+    "url": "https://services.cuzk.cz/wms/wms.asp?request=GetMap&layers=ZM10&format=image/png&crs=EPSG:3857",
+    "layers": "ZM10",
+    "description": "Základní mapa 1:10 000, ČÚZK (2025)"
+  },
+  {
+    "category": "Základní mapy",
+    "name": "ZM50",
+    "type": "WMS",
+    "url": "https://services.cuzk.cz/wms/wms.asp?request=GetMap&layers=ZM50&format=image/png&crs=EPSG:3857",
+    "layers": "ZM50",
+    "description": "Základní mapa 1:50 000, ČÚZK (2025)"
+  },
+  {
+    "category": "Základní mapy",
+    "name": "ZM200",
+    "type": "WMS",
+    "url": "https://services.cuzk.cz/wms/wms.asp?request=GetMap&layers=ZM200&format=image/png&crs=EPSG:3857",
+    "layers": "ZM200",
+    "description": "Základní mapa 1:200 000, ČÚZK (2025)"
+  },
+  {
+    "category": "Reliéf",
+    "name": "DMR 5G – stínovaný reliéf",
+    "type": "WMS",
+    "url": "https://services.cuzk.cz/wms/dmr5g-relief/WMService.aspx?request=GetMap&layers=GR_RAS&format=image/png&crs=EPSG:3857",
+    "layers": "GR_RAS",
+    "description": "Stínovaný reliéf z digitálního modelu terénu 5G"
+  },
+  
