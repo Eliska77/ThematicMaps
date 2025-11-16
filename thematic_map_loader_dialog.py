@@ -46,38 +46,43 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
 # --- importace JSON ---
 import os
 import json
+from qgis.PyQt import uic, QtWidgets
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import QListWidgetItem, QMessageBox
 from qgis.core import QgsRasterLayer, QgsProject
+
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'thematic_map_loader_dialog_base.ui'))
+
 
 class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(ThematicMapLoaderDialog, self).__init__(parent)
         self.setupUi(self)
-        
-       # --- cesta k JSON ---
+
+        # --- cesta k JSON ---
         self.json_path = os.path.join(os.path.dirname(__file__), 'maps.json')
         self.layers_data = []
 
-       # --- načtení JSON ---
+        # --- načtení JSON ---
         if os.path.exists(self.json_path):
             with open(self.json_path, "r", encoding="utf-8") as f:
                 self.layers_data = json.load(f)
-         
-       # --- naplnění QListWidget vrstev ---
-       self.listWidget_layers.clear()
-       for layer in self.layers_data:
+
+        # --- naplnění QListWidget vrstev ---
+        self.listWidget_layers.clear()
+        for layer in self.layers_data:
             item = QListWidgetItem(layer["name"])
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Unchecked)
             self.listWidget_layers.addItem(item)
-         
+
         # --- propojení tlačítek OK / Cancel ---
         self.button_box.accepted.connect(self.add_selected_layers)
         self.button_box.rejected.connect(self.reject)
-    
-     def add_selected_layers(self):
+
+    def add_selected_layers(self):
         """Přidá vybrané vrstvy do QGIS projektu."""
         for index in range(self.listWidget_layers.count()):
             item = self.listWidget_layers.item(index)
@@ -88,7 +93,6 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
                         uri = f"{layer_info['url']}?layers={layer_info['layers']}&crs=EPSG:3857&format=image/png"
                         rlayer = QgsRasterLayer(uri, layer_info["name"], "wms")
                     elif layer_info["type"].upper() == "WMTS":
-                        # WMTS načteno správně
                         uri = layer_info["url"]
                         rlayer = QgsRasterLayer(uri, layer_info["name"], "wmts")
                     else:
@@ -102,8 +106,6 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
                     QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_info['name']}:\n{str(e)}")
 
         self.accept()
-
-
 
 
 
