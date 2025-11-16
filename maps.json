@@ -3,7 +3,7 @@
     "category": "Ortofoto",
     "name": "Ortofoto ČR (ČÚZK)",
     "type": "WMS",
-    "url": "https://ags.cuzk.gov.cz/arcgis1/services/ORTOFOTO/MapServer/WMSServer",
+    "url": "https://ags.cuzk.gov.cz/arcgis1/services/ORTOFOTO/MapServer/WMSServer?",
     "layers": "ORTOFOTO",
     "description": "Aktuální ortofoto České republiky poskytované ČÚZK (2025)"
   },
@@ -19,8 +19,8 @@
   "category": "Základní mapy",
   "name": "ZM10 (Základní topografie 1:10 000)",
   "type": "WMS",
-  "url": "https://ags.cuzk.gov.cz/arcgis1/services/ZTM/ZTM10/MapServer/WMSServer",
-  "layers": "ZTM10",
+  "url": "https://ags.cuzk.gov.cz/arcgis1/services/ZTM/ZTM10/MapServer/WMSServer?",
+  "layers": "0",
   "description": "Základní mapa 1:10 000, ČÚZK (2025)"
 },
   {
