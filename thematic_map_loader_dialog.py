@@ -110,9 +110,9 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
                         elif layer_type == "WMTS":
                             uri = layer_info["url"]
                             rlayer = QgsRasterLayer(uri, layer_name, "wmts")
-                        elif layer_type == "XYZ" or "tilecache" in layer_info["url"]:
+                        elif layer_type == "XYZ" or ("tilecache" in layer_info["url"].lower()):
                             uri = layer_info["url"]
-                            rlayer = QgsRasterLayer(f"type=xyz&url={uri}", layer_name, "wms")
+                            rlayer = QgsRasterLayer(f"type=xyz&url={uri}", layer_name, "xyz")
                         else:
                             continue
 
