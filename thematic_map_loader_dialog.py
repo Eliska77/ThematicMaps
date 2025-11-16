@@ -43,21 +43,19 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
-# --- importace JSON ---
+# ---import JSON---
 import os
 import json
 from qgis.PyQt import uic, QtWidgets
 from qgis.PyQt.QtCore import Qt
-from qgis.PyQt.QtWidgets import QListWidgetItem, QMessageBox
-from qgis.core import QgsRasterLayer, QgsProject, QgsProviderRegistry
+from qgis.PyQt.QtWidgets import QTreeWidgetItem, QMessageBox
+from qgis.core import QgsRasterLayer, QgsProject
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'thematic_map_loader_dialog_base.ui'))
 
-
 class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
-        """Constructor."""
         super(ThematicMapLoaderDialog, self).__init__(parent)
         self.setupUi(self)
 
@@ -70,13 +68,22 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
             with open(self.json_path, "r", encoding="utf-8") as f:
                 self.layers_data = json.load(f)
 
-        # --- naplnění QListWidget vrstev ---
-        self.listWidget_layers.clear()
+        # --- naplnění QTreeWidget vrstev podle kategorií ---
+        self.treeWidget_layers.clear()  # v .ui pojmenuj widget jako treeWidget_layers
+        categories = {}
         for layer in self.layers_data:
-            item = QListWidgetItem(layer["name"])
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            item.setCheckState(Qt.Unchecked)
-            self.listWidget_layers.addItem(item)
+            category = layer.get("category", "Nezařazeno")
+            if category not in categories:
+                cat_item = QTreeWidgetItem([category])
+                cat_item.setFlags(cat_item.flags() & ~Qt.ItemIsSelectable)
+                self.treeWidget_layers.addTopLevelItem(cat_item)
+                categories[category] = cat_item
+
+            layer_item = QTreeWidgetItem([layer["name"]])
+            layer_item.setCheckState(0, Qt.Unchecked)
+            categories[category].addChild(layer_item)
+
+        self.treeWidget_layers.expandAll()  # rozbalíme všechny kategorie
 
         # --- propojení tlačítek OK / Cancel ---
         self.button_box.accepted.connect(self.add_selected_layers)
@@ -84,42 +91,37 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def add_selected_layers(self):
         """Přidá vybrané vrstvy do QGIS projektu."""
-        for index in range(self.listWidget_layers.count()):
-            item = self.listWidget_layers.item(index)
-            if item.checkState() == Qt.Checked:
-                layer_info = self.layers_data[index]
-                try:
-                    layer_type = layer_info["type"].upper()
-                    layer_name = layer_info["name"]
-
-                    if layer_type == "WMS":
-                        uri = f"{layer_info['url']}?layers={layer_info['layers']}&crs=EPSG:3857&format=image/png"
-                        rlayer = QgsRasterLayer(uri, layer_name, "wms")
-
-                    elif layer_type == "WMTS":
-                        uri = layer_info["url"]
-                        rlayer = QgsRasterLayer(uri, layer_name, "wmts")
-
-                    elif layer_type == "XYZ" or "tilecache" in layer_info["url"]:
-                        # speciální případ: XYZ tile (např. RainViewer)
-                        uri = layer_info["url"]
-                        # QGIS očekává {z}/{x}/{y} placeholder
-                        rlayer = QgsRasterLayer(f"type=xyz&url={uri}", layer_name, "wms")  # type=xyz provider
-                        
-                    else:
+        for category_index in range(self.treeWidget_layers.topLevelItemCount()):
+            cat_item = self.treeWidget_layers.topLevelItem(category_index)
+            for i in range(cat_item.childCount()):
+                item = cat_item.child(i)
+                if item.checkState(0) == Qt.Checked:
+                    layer_name = item.text(0)
+                    # najdeme data v JSON podle jména
+                    layer_info = next((l for l in self.layers_data if l["name"] == layer_name), None)
+                    if not layer_info:
                         continue
+                    try:
+                        layer_type = layer_info["type"].upper()
 
-                    if rlayer.isValid():
-                        QgsProject.instance().addMapLayer(rlayer)
-                    else:
-                        QMessageBox.warning(self, "Chyba vrstvy", f"Nelze načíst vrstvu: {layer_name}")
-                except Exception as e:
-                    QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_name}:\n{str(e)}")
+                        if layer_type == "WMS":
+                            uri = f"{layer_info['url']}?layers={layer_info['layers']}&crs=EPSG:3857&format=image/png"
+                            rlayer = QgsRasterLayer(uri, layer_name, "wms")
+                        elif layer_type == "WMTS":
+                            uri = layer_info["url"]
+                            rlayer = QgsRasterLayer(uri, layer_name, "wmts")
+                        elif layer_type == "XYZ" or "tilecache" in layer_info["url"]:
+                            uri = layer_info["url"]
+                            rlayer = QgsRasterLayer(f"type=xyz&url={uri}", layer_name, "wms")
+                        else:
+                            continue
+
+                        if rlayer.isValid():
+                            QgsProject.instance().addMapLayer(rlayer)
+                        else:
+                            QMessageBox.warning(self, "Chyba vrstvy", f"Nelze načíst vrstvu: {layer_name}")
+                    except Exception as e:
+                        QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_name}:\n{str(e)}")
 
         self.accept()
 
-
-
-
-  
-        
