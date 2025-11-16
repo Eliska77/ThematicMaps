@@ -138,11 +138,11 @@
  {
     "category": "ČHMÚ – meteoradar",
     "name": "Radar – RainViewer",
-    "type": "WMTS",
+    "type": "XYZ",
     "url": "https://tilecache.rainviewer.com/v2/radar/{z}/{x}/{y}/0/1_1.png",
     "layers": "rainviewer",
     "description": "Radarová data – RainViewer"
-  },   
+  }, 
    {
     "category": "Sentinel 2 (ESA)",
     "name": "Sentinel-2 – s2cloudless 2020",
