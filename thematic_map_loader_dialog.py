@@ -49,7 +49,7 @@ import json
 from qgis.PyQt import uic, QtWidgets
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import QListWidgetItem, QMessageBox
-from qgis.core import QgsRasterLayer, QgsProject
+from qgis.core import QgsRasterLayer, QgsProject, QgsProviderRegistry
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'thematic_map_loader_dialog_base.ui'))
@@ -89,25 +89,34 @@ class ThematicMapLoaderDialog(QtWidgets.QDialog, FORM_CLASS):
             if item.checkState() == Qt.Checked:
                 layer_info = self.layers_data[index]
                 try:
-                    if layer_info["type"].upper() == "WMS":
+                    layer_type = layer_info["type"].upper()
+                    layer_name = layer_info["name"]
+
+                    if layer_type == "WMS":
                         uri = f"{layer_info['url']}?layers={layer_info['layers']}&crs=EPSG:3857&format=image/png"
-                        rlayer = QgsRasterLayer(uri, layer_info["name"], "wms")
-                    elif layer_info["type"].upper() == "WMTS":
+                        rlayer = QgsRasterLayer(uri, layer_name, "wms")
+
+                    elif layer_type == "WMTS":
                         uri = layer_info["url"]
-                        rlayer = QgsRasterLayer(uri, layer_info["name"], "wmts")
+                        rlayer = QgsRasterLayer(uri, layer_name, "wmts")
+
+                    elif layer_type == "XYZ" or "tilecache" in layer_info["url"]:
+                        # speciální případ: XYZ tile (např. RainViewer)
+                        uri = layer_info["url"]
+                        # QGIS očekává {z}/{x}/{y} placeholder
+                        rlayer = QgsRasterLayer(f"type=xyz&url={uri}", layer_name, "wms")  # type=xyz provider
+                        
                     else:
                         continue
 
                     if rlayer.isValid():
                         QgsProject.instance().addMapLayer(rlayer)
                     else:
-                        QMessageBox.warning(self, "Chyba vrstvy", f"Nelze načíst vrstvu: {layer_info['name']}")
+                        QMessageBox.warning(self, "Chyba vrstvy", f"Nelze načíst vrstvu: {layer_name}")
                 except Exception as e:
-                    QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_info['name']}:\n{str(e)}")
+                    QMessageBox.warning(self, "Chyba", f"Chyba při načítání vrstvy {layer_name}:\n{str(e)}")
 
         self.accept()
-
-
 
 
 
